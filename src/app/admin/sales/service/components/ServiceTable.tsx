@@ -334,9 +334,9 @@ export default function ServicesTable() {
                                 </td>
 
                                 <td className="p-2 text-center">
-                                    {typeof s.category_id === "string"
+                                    {typeof s.category === "string"
                                         ? "Chưa có"
-                                        : s.category_id?.name || "Chưa có"}
+                                        : s.category?.name || "Chưa có"}
                                 </td>
 
                                 <td className="p-2 text-center">
@@ -398,7 +398,7 @@ export default function ServicesTable() {
                         <p><strong>Tên:</strong> {s.name}</p>
                         <p><strong>Mô tả:</strong> {s.description}</p>
                         <p><strong>Giá:</strong> {s.price.toLocaleString()} đ</p>
-                        <p><strong>Danh mục:</strong> {typeof s.category_id === "string" ? "Chưa có" : s.category_id?.name}</p>
+                        <p><strong>Danh mục:</strong> {typeof s.category === "string" ? "Chưa có" : s.category?.name}</p>
                         <p className="flex items-center gap-2">
                             <strong>Trạng thái:</strong>
                             <span className={`px-2 py-1 rounded text-sm ${s.status === "active"

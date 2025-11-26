@@ -1,11 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import { ChevronRightCircle, Star } from "lucide-react";
+import { ChevronRightCircle } from "lucide-react";
 import Link from "next/link";
 import { serviceService } from "@/services/service.service";
 import { useState, useEffect } from "react";
 import { Service } from "@/types/Service";
+
+type FeaturedWrapper = {
+  services: Service[];
+  total: number;
+  totalPages: number;
+};
+
+type FeaturedResponse = Service[] | FeaturedWrapper;
+
+// Type guard xác định kết quả có phải dạng object với "services"
+function isWrappedResponse(res: FeaturedResponse): res is FeaturedWrapper {
+  return typeof res === "object" && !Array.isArray(res) && "services" in res;
+}
 
 export default function FeaturedFixServices() {
   const [services, setServices] = useState<Service[]>([]);
@@ -15,12 +28,26 @@ export default function FeaturedFixServices() {
   useEffect(() => {
     const fetchFeaturedServices = async () => {
       try {
-        const res = await serviceService.getFeatured(5);
-        setFeatured(res.services || []);
+        const res: FeaturedResponse = await serviceService.getFeatured(5);
+
+        let serviceList: Service[] = [];
+        if (isWrappedResponse(res)) {
+          serviceList = res.services;
+        } else {
+          serviceList = res;
+        }
+
+        const converted = serviceList.map((s) => ({
+          id: s._id,
+          views: s.rating || 0, // fallback nếu BE không trả views
+        }));
+
+        setFeatured(converted);
       } catch (error) {
         console.error("Failed to fetch featured services:", error);
       }
     };
+
     fetchFeaturedServices();
   }, []);
 
@@ -29,8 +56,7 @@ export default function FeaturedFixServices() {
 
     const fetchServices = async () => {
       try {
-        const allServices = await serviceService.getAll();
-
+        const { services: allServices } = await serviceService.getAll();
         const mapped = allServices
           .map((s) => ({
             ...s,
@@ -92,7 +118,6 @@ export default function FeaturedFixServices() {
                 />
               </div>
               <p className="text-xs sm:text-sm text-center">{item.name}</p>
-              {/* Price + Rating */}
               <div className="flex items-center justify-between mt-auto">
                 <div className="flex items-center gap-1">
                   <span className="text-[11px] text-gray-400 line-through">

@@ -235,16 +235,5 @@ export const productService = {
     }
   },
 
-  //excel
-  exportProductsToExcel: async (): Promise<Blob> => {
-    try {
-      const res = await api.get('/products/export', {
-        responseType: 'blob',
-      });
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  },
 
 };

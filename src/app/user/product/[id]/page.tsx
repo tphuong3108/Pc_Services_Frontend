@@ -96,19 +96,11 @@ export default function ProductDetailPage() {
   return (
     <>
       <CategoryNav
-        selectedCategory={
-          typeof product.category_id === "object"
-            ? product.category_id.name
-            : (product.category_id as string)
-        }
+        selectedCategory={product.category?.name || product.category_id}
         onSelectCategory={() => {}}
       />
       <ProductBreadcrumb
-        category={
-          typeof product.category_id === "object"
-            ? product.category_id.name
-            : (product.category_id as string)
-        }
+        category={product.category?.name || product.category_id}
       />
 
       <div className="max-w-7xl mx-auto px-4 py-8">

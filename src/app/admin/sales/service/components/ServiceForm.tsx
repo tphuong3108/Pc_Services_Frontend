@@ -78,12 +78,12 @@ export default function ServiceForm({
                 estimated_time: initialData.estimated_time || "",
                 status: (initialData.status as "active" | "inactive" | "hidden") || "active",
                 category_id:
-                    typeof initialData.category_id === "string"
-                        ? initialData.category_id
-                        : initialData.category_id &&
-                            typeof initialData.category_id === "object" &&
-                            "_id" in initialData.category_id
-                            ? (initialData.category_id as { _id: string })._id
+                    typeof initialData.category?._id === "string"
+                        ? initialData.category?._id
+                        : initialData.category?._id &&
+                            typeof initialData.category?._id === "object" &&
+                            "_id" in initialData.category?._id
+                            ? (initialData.category?._id as { _id: string })._id
                             : "",
                 images: initialData.images || [],
             }));
