@@ -22,7 +22,6 @@ export type Service = {
   rating?: number;
   discount?: number;
   images?: UploadedImage[];
-  category_id?: string | { _id: string; name: string };
 }
 
 export interface ServiceApi {

@@ -1,18 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-    webpack(config, { isServer }) {
-        // Disable canvas on client bundle
-        if (!isServer){
-            config.resolve = config.resolve || {};
-            config.resolve.alias = config.resolve.alias || {};
-            config.resolve.alias["canvas"] = false;
-        }
+    webpack(config) {
+        // Quan trọng: alias áp dụng cho cả server & client
+        config.resolve.alias = {
+            ...(config.resolve.alias || {}),
+            canvas: false,
+        };
 
-        // Add SVG loader
-        config.module = config.module || {};
+        // SVG loader giữ nguyên
         config.module.rules ||= [];
-
         config.module.rules.push({
             test: /\.svg$/i,
             issuer: /\.[jt]sx?$/,

@@ -124,12 +124,7 @@ export const productService = {
       formData.append("size", data.size || "");
       formData.append("model", data.model || "");
       formData.append("resolution", data.resolution || "");
-      formData.append(
-          "category_id",
-          typeof data.category_id === "string"
-            ? data.category_id
-            : data.category_id?._id || ""
-        );
+      formData.append("category_id", data.category_id || "");
       (data.tags || []).forEach((tag, i) => {
         formData.append(`tags[${i}]`, tag);
       });
@@ -169,12 +164,8 @@ export const productService = {
       formData.append("size", data.size || "");
       formData.append("model", data.model || "");
       formData.append("resolution", data.resolution || "");
-      formData.append(
-        "category_id",
-        typeof data.category_id === "string"
-          ? data.category_id
-          : data.category_id?._id || ""
-      );
+      formData.append("category_id", data.category_id || "");
+
       (data.tags || []).forEach((tag, i) => {
         formData.append(`tags[${i}]`, tag);
       });
@@ -239,6 +230,18 @@ export const productService = {
   countViewRedis: async (id: string): Promise<void> => {
     try {
       await api.post(`/products/${id}/views`);
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  //excel
+  exportProductsToExcel: async (): Promise<Blob> => {
+    try {
+      const res = await api.get('/products/export', {
+        responseType: 'blob',
+      });
+      return res.data;
     } catch (error) {
       throw error;
     }

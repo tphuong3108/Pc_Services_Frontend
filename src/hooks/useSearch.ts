@@ -1,18 +1,11 @@
 import { useState } from "react";
 import { searchProducts } from "@/services/search.service";
 import { useRouter } from "next/navigation";
-import { Product } from "@/types/Product";
 
 export function useSearch() {
   const router = useRouter();
 
-  const [results, setResults] = useState<{
-    products: Product[];
-    total: number;
-  }>({
-    products: [],
-    total: 0,
-  });
+  const [results, setResults] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 

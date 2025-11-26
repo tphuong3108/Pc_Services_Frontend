@@ -6,7 +6,6 @@ import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import axios from "axios";
-import api from "@/lib/api";
 
 interface Info {
   terms: string;
@@ -41,7 +40,7 @@ export default function PdfReaderPage() {
   useEffect(() => {
     const fetchInfo = async () => {
       try {
-      const res = await api.get("/info");
+        const res = await axios.get("http://localhost:5000/api/info");
         setInfo(res.data);
       } catch (error) {
         console.error("Failed to load info:", error);

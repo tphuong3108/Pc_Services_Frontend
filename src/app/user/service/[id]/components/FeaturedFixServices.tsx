@@ -1,31 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import { ChevronRightCircle } from "lucide-react";
+import { ChevronRightCircle, Star } from "lucide-react";
 import Link from "next/link";
 import { serviceService } from "@/services/service.service";
 import { useState, useEffect } from "react";
 import { Service } from "@/types/Service";
 
-type FeaturedItem = { id: string; views: number };
-
 export default function FeaturedFixServices() {
   const [services, setServices] = useState<Service[]>([]);
-  const [featured, setFeatured] = useState<FeaturedItem[]>([]);
+  const [featured, setFeatured] = useState<{ id: string; views: number }[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Lấy featured list từ API nhưng API trả Service[]
   useEffect(() => {
     const fetchFeaturedServices = async () => {
       try {
-        const res = await serviceService.getFeatured(5); 
-
-        const converted: FeaturedItem[] = res.map((s) => ({
-          id: s._id,
-          views: Math.floor(Math.random() * 500 + 50), 
-        }));
-
-        setFeatured(converted);
+        const res = await serviceService.getFeatured(5);
+        setFeatured(res.services || []);
       } catch (error) {
         console.error("Failed to fetch featured services:", error);
       }
@@ -33,16 +24,14 @@ export default function FeaturedFixServices() {
     fetchFeaturedServices();
   }, []);
 
-  // Lấy dịch vụ đầy đủ → merge với featured → sort theo views
   useEffect(() => {
     if (featured.length === 0) return;
 
     const fetchServices = async () => {
       try {
-        const all = await serviceService.getAll();
-        const list = all.services;
+        const allServices = await serviceService.getAll();
 
-        const mapped = list
+        const mapped = allServices
           .map((s) => ({
             ...s,
             oldPrice: s.price * 1.2 || 0,
@@ -53,12 +42,12 @@ export default function FeaturedFixServices() {
               : [{ url: "/images/placeholder.png", public_id: "placeholder" }],
           }))
           .sort((a, b) => {
-            const aF = featured.find((f) => f.id === a._id);
-            const bF = featured.find((f) => f.id === b._id);
+            const aFeatured = featured.find((f) => f.id === a._id);
+            const bFeatured = featured.find((f) => f.id === b._id);
 
-            if (aF && bF) return bF.views - aF.views;
-            if (aF) return -1;
-            if (bF) return 1;
+            if (aFeatured && bFeatured) return bFeatured.views - aFeatured.views;
+            if (aFeatured) return -1;
+            if (bFeatured) return 1;
             return 0;
           });
 
@@ -103,7 +92,7 @@ export default function FeaturedFixServices() {
                 />
               </div>
               <p className="text-xs sm:text-sm text-center">{item.name}</p>
-
+              {/* Price + Rating */}
               <div className="flex items-center justify-between mt-auto">
                 <div className="flex items-center gap-1">
                   <span className="text-[11px] text-gray-400 line-through">
