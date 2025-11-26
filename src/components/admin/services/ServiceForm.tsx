@@ -67,29 +67,24 @@ export default function ServiceForm({
             }
         };
 
-
         if (initialData) {
             setForm((prev) => ({
                 ...prev,
                 name: initialData.name || "",
                 description: initialData.description || "",
                 price: initialData.price || 0,
-                type: (initialData.type as "at_store" | "at_home") || "at_store",
+                type: initialData.type || "at_store",
                 estimated_time: initialData.estimated_time || "",
-                status: (initialData.status as "active" | "inactive" | "hidden") || "active",
-                category_id:
-                    typeof initialData.category._id === "string"
-                        ? initialData.category._id
-                        : initialData.category &&
-                            typeof initialData.category._id === "object" &&
-                            "_id" in initialData.category._id
-                            ? (initialData.category._id as { _id: string })._id
-                            : "",
+                status: initialData.status || "active",
+
+                category_id: initialData.category?._id || "",
+
                 images: initialData.images || [],
             }));
 
             fetchDiscount();
         }
+
     }, [initialData]);
 
     const handleChange = (
