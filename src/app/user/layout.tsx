@@ -39,9 +39,9 @@ export default function UserLayout({
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 bg-blue-500 rounded-full shadow-lg hover:bg-blue-600 transition flex items-center justify-center"
       >
-      <div className="w-14 h-14 flex items-center justify-center">
-        <Zalo className="w-full h-full" />
-      </div>
+        <div className="w-14 h-14 relative">
+          <Image src={Zalo} alt="Zalo" fill className="object-contain" />
+        </div>
       </a>
     </div>
   );
