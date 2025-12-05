@@ -1,32 +1,30 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-    webpack(config) {
-        // Quan trọng: alias áp dụng cho cả server & client
-        config.resolve.alias = {
-            ...(config.resolve.alias || {}),
-            canvas: false,
-        };
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/i,
+      type: "asset",
+      resourceQuery: { not: [/component/] }, 
+    });
 
-        // SVG loader giữ nguyên
-        config.module.rules ||= [];
-        config.module.rules.push({
-            test: /\.svg$/i,
-            issuer: /\.[jt]sx?$/,
-            use: ["@svgr/webpack"],
-        });
+    config.module.rules.push({
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      resourceQuery: /component/,
+      use: ["@svgr/webpack"], 
+    });
 
-        return config;
-    },
-    images: {
+    return config;
+  },
+
+  images: {
+    unoptimized: true,
     remotePatterns: [
-        {
-        protocol: "https",
-        hostname: "pc-services-backend-uff9.onrender.com",
-        pathname: "/**",
-        },
+      { protocol: "https", hostname: "**", pathname: "/**" },
+      { protocol: "http", hostname: "**", pathname: "/**" },
     ],
-    },
+  },
 };
 
 export default nextConfig;
