@@ -18,18 +18,14 @@ const nextConfig: NextConfig = {
 
         return config;
     },
-
     images: {
-        // Allow images from any external hostname and disable Next.js
-        // image optimization so the app will accept images without
-        // domain restrictions or size limits.
-        remotePatterns: [
-            { protocol: "https", hostname: "**", port: "", pathname: "/**" },
-            { protocol: "http", hostname: "**", port: "", pathname: "/**" },
-        ],
-        dangerouslyAllowSVG: true,
-        contentSecurityPolicy: "default-src 'self'; img-src 'self' data: blob: *;",
-        unoptimized: true,
+    remotePatterns: [
+        {
+        protocol: "https",
+        hostname: "pc-services-backend-uff9.onrender.com",
+        pathname: "/**",
+        },
+    ],
     },
 };
 
