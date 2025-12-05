@@ -2,19 +2,25 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   webpack(config) {
-    // ⚡ Rule cho phép sử dụng SVG như React Component khi dùng '?svgr'
+    // ⚡ SVG as React Component when using ?svgr
     config.module.rules.push({
       test: /\.svg$/i,
-      resourceQuery: /svgr/, // chỉ apply khi import *.svg?svgr
+      resourceQuery: /svgr/, 
       use: ["@svgr/webpack"],
     });
 
-    // ⚡ Còn lại các file SVG sẽ được Next xử lý như asset → dùng được với <Image>
+    // ⚡ SVG as file asset (for next/image)
     config.module.rules.push({
       test: /\.svg$/i,
       type: "asset",
       resourceQuery: { not: [/svgr/] },
     });
+
+    // ⚠ FIX LỖI CANVAS KHI BUILD TRÊN VERCEL
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      canvas: false,
+    };
 
     return config;
   },
@@ -23,14 +29,8 @@ const nextConfig: NextConfig = {
     unoptimized: true,
     dangerouslyAllowSVG: true,
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**",
-      },
-      {
-        protocol: "http",
-        hostname: "**",
-      },
+      { protocol: "https", hostname: "**" },
+      { protocol: "http", hostname: "**" },
     ],
   },
 };
