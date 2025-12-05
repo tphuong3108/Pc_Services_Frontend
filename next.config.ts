@@ -4,16 +4,14 @@ const nextConfig: NextConfig = {
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,
-      type: "asset",
-      resourceQuery: { not: [/component/] }, 
+      issuer: /\.[jt]sx?$/,
+      use: ["@svgr/webpack"],
     });
 
-    config.module.rules.push({
-      test: /\.svg$/i,
-      issuer: /\.[jt]sx?$/,
-      resourceQuery: /component/,
-      use: ["@svgr/webpack"], 
-    });
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      canvas: false,
+    };
 
     return config;
   },
@@ -24,6 +22,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "**", pathname: "/**" },
       { protocol: "http", hostname: "**", pathname: "/**" },
     ],
+    dangerouslyAllowSVG: true,
   },
 };
 
